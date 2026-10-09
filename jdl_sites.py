@@ -41,16 +41,31 @@ API_HEADERS = {
     "Accept": "application/json, text/plain, */*",
 }
 
-# 内置省市区 ID 表（仅收录"已实测验证"的城市；新城市请用 --region-json 或补充此表）
-# 字段：provinceId / cityId / countyId / 展示名
-KNOWN_REGIONS = {
-    # 北京（东城区）—— 接口实测：provinceId=1, cityId=2802, countyId=54744
+# 内置省市区 ID 表：优先读取同目录 regions.json（推荐，新增城市不用改代码），
+# 文件缺失时回退到内嵌表。字段：provinceId / cityId / countyId / 展示名
+EMBEDDED_REGIONS = {
     "北京": {"provinceId": 1, "cityId": 2802, "countyId": 54744,
-            "label": "北京市-东城区"},
-    # 惠州（惠城区）—— 接口实测：provinceId=19, cityId=1643, countyId=36176
+            "label": "北京市-东城区", "province": "北京", "city": "北京", "district": "东城区"},
     "惠州": {"provinceId": 19, "cityId": 1643, "countyId": 36176,
-             "label": "广东省-惠州市-惠城区"},
+             "label": "广东省-惠州市-惠城区", "province": "广东", "city": "惠州市", "district": "惠城区"},
 }
+
+
+def load_regions() -> dict:
+    """从 regions.json 加载地区表；失败时回退内嵌表。"""
+    regions = dict(EMBEDDED_REGIONS)
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "regions.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+        for r in data.get("regions", []):
+            regions[r["key"]] = r
+    except Exception as e:
+        print(f"[提示] regions.json 读取失败（{e}），使用内嵌地区表。")
+    return regions
+
+
+KNOWN_REGIONS = load_regions()
 
 # 奥维地图导入用的 KML 模板（标准 KML 2.2，奥维互动地图可直接识别）
 KML_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
@@ -101,18 +116,17 @@ def fetch_sites_api(region: dict, pause: float = 1.0) -> list:
     return body.get("data") or []
 
 
-def fetch_sites_browser(region_label: str) -> list:
+def fetch_sites_browser(province: str, city: str, district: str = "") -> list:
     """
     备选数据源：Playwright 无头浏览器驱动官网页面（任何城市都能跑，无需维护 ID 表）。
-    TODO(联调项)：地区选择器的 DOM 结构在真实环境需确认选择器；
-                  步骤已按实测页面流程编写，首次运行请打开 headless=False 观察。
+    流程按实测页面结构编写：
+      主输入框 → 弹层 → 点第一级 tab(省份) → 选省份 → 选城市 → 选区县 → 查询
+    通过拦截 getSiteListByAddressInfo 接口响应直接拿结构化数据，不做 DOM 解析。
     """
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
         sys.exit("缺少依赖：请先运行  pip install -r requirements.txt  （含 playwright 及其浏览器）")
-
-    province = region_label.split("省")[0] if "省" in region_label else region_label
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -120,20 +134,29 @@ def fetch_sites_browser(region_label: str) -> list:
         page.goto("https://www.jdl.com/network/", timeout=30000)
         page.wait_for_load_state("networkidle")
 
-        # 1) 打开地区选择器（主查询输入框，默认值如"北京 东城区"）
-        # TODO: 以下为骨架步骤，选择器需在真实页面联调：
-        #   page.click('input[placeholder="请输入省份/城市/区县搜索"]')
-        #   page.fill('input[placeholder="请输入省份/城市/区县搜索"]', province)
-        #   page.click(f'text={province}')
-        #   page.fill('input[placeholder="请输入省份/城市/区县搜索"]', city)
-        #   page.click(f'text={city}')
-        #   page.click('text=查询')
-        #   page.wait_for_timeout(3000)
-        #   # 解析结果区文本（每站：名称 / 地址 / 联系电话 / 网点编码）
-        #   text = page.inner_text("body")
-        #   ... 用正则按块拆分站点信息 ...
+        # 1) 打开省市区选择器弹层
+        page.click('input[placeholder="请选择省市区"]')
+        page.wait_for_timeout(500)
+        # 2) 点击第一级 tab（当前省份），右侧选项变为省份列表
+        page.click('.cascade-address .tab-list li:first-child')
+        page.wait_for_timeout(500)
+        # 3) 选择省份
+        page.click(f'.option-list li:has-text("{province}")')
+        page.wait_for_timeout(500)
+        # 4) 选择城市
+        page.click(f'.option-list li:has-text("{city}")')
+        page.wait_for_timeout(500)
+        # 5) 选择区县（可选）
+        if district:
+            page.click(f'.option-list li:has-text("{district}")')
+            page.wait_for_timeout(500)
+        # 6) 点击查询，等待接口返回并解析
+        with page.expect_response(lambda r: "getSiteListByAddressInfo" in r.url, timeout=20000) as resp_info:
+            page.click('text=查询')
+        data = resp_info.value.json()
+        sites = data.get("data") or []
         browser.close()
-    raise NotImplementedError("browser 数据源为骨架，需按 TODO 完成联调；当前请用 --source api 或 --source demo")
+        return sites if isinstance(sites, list) else [sites]
 
 
 # ---------------------------------------------------------------- 输出生成
@@ -153,7 +176,7 @@ def build_kml(sites: list, title: str, source_desc: str) -> str:
             desc_parts.append("营业：" + s["businessHoursStart"] + "~" + s.get("businessHoursEnd", ""))
         places.append(KML_PLACEMARK.format(
             name=_escape_xml(name),
-            desc=_escape_xml(";".join(p for p in desc_parts if p)),
+            desc=_escape_xml("；".join(p for p in desc_parts if p)),
             lon=s.get("longitude", 0),
             lat=s.get("latitude", 0),
         ))
@@ -247,6 +270,7 @@ def main():
     parser = argparse.ArgumentParser(description="京东物流网点查询 → 奥维 KML/CSV 标注工具")
     parser.add_argument("--city", required=True, help="城市名，如：惠州市")
     parser.add_argument("--district", default="", help="区县名（可选），如：惠城区")
+    parser.add_argument("--province", default="", help="省份名（浏览器模式用，如：广东；缺省时自动查地区表或交互输入）")
     parser.add_argument("--source", choices=["api", "browser", "demo"], default="api",
                         help="数据源：api=接口(默认) / browser=无头浏览器 / demo=内置示例数据(离线验证输出)")
     parser.add_argument("--out", default="output", help="输出目录（默认 output/）")
@@ -270,15 +294,20 @@ def main():
         region = {"label": f"{args.city}-{args.district or '示例'}"}
         source_desc = "示例数据（接口实测样本，离线验证用）"
     else:
-        region = resolve_region(args.city, args.district, args.region_json)
-        if args.source == "api":
+        if args.source == "browser":
+            # 浏览器模式不需要省市区 ID，直接用名称驱动页面（任何城市可用）
+            province = args.province or KNOWN_REGIONS.get(args.city, {}).get("province", "")
+            if not province:
+                province = input(f"请输入「{args.city}」所在的省份名（如：广东）：").strip()
+            region = {"label": f"{args.city}-{args.district or '全部'}"}
+            demo_sites = fetch_sites_browser(province, args.city, args.district)
+            source_desc = f"京东物流官网页面（{datetime.now():%Y-%m-%d}）"
+        else:
+            region = resolve_region(args.city, args.district, args.region_json)
             sites_raw = fetch_sites_api(region, pause=args.pause)
             # 接口可能返回 dict（单条）或 list，统一成 list
             demo_sites = sites_raw if isinstance(sites_raw, list) else [sites_raw]
             source_desc = f"京东物流官网公开接口（{datetime.now():%Y-%m-%d}）"
-        else:
-            demo_sites = fetch_sites_browser(region.get("label", args.city))
-            source_desc = f"京东物流官网页面（{datetime.now():%Y-%m-%d}）"
 
     if not demo_sites:
         sys.exit("未查询到站点数据（可能该地区暂无网点，或 ID 配置有误）。")

@@ -1,0 +1,25 @@
+{
+  "说明": "京东物流网点查询工具的省市区ID表（实测验证后入库）。新增城市：复制一个条目，填上从官网接口请求参数中拿到的 provinceId/cityId/countyId。",
+  "regions": [
+    {
+      "key": "北京",
+      "provinceId": 1,
+      "cityId": 2802,
+      "countyId": 54744,
+      "province": "北京",
+      "city": "北京",
+      "district": "东城区",
+      "label": "北京市-东城区"
+    },
+    {
+      "key": "惠州",
+      "provinceId": 19,
+      "cityId": 1643,
+      "countyId": 36176,
+      "province": "广东",
+      "city": "惠州市",
+      "district": "惠城区",
+      "label": "广东省-惠州市-惠城区"
+    }
+  ]
+}
