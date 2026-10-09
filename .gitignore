@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# 虚拟环境
+.venv/
+venv/
+
+# 生成输出（运行工具产生的 KML/CSV 不入库）
+output/
+
+# 环境与日志
+.env
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
