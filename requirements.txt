@@ -1,0 +1,6 @@
+# 主数据源（接口）所需
+requests>=2.31.0
+
+# 备选数据源（无头浏览器，可选安装；使用 --source browser 前需执行：
+#   pip install playwright && playwright install chromium
+playwright>=1.40.0

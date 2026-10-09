@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>京东物流网点-北京-东城区</name>
+  <description>数据来源：京东物流官网网点查询（公开接口）｜抓取日期：2026-10-10｜共 3 个站点</description>
+  <Placemark>
+    <name>北京市-东四-雍和宫项目接驳点</name>
+    <description>北京市东城区北新桥歌华大厦(青龙胡同北)；电话：18730726288；网点编码：2904839；服务：京配配送服务</description>
+    <Point>
+      <coordinates>116.424217,39.948864,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>北京市-东四-条子胡同项目接驳点</name>
+    <description>北京市东城区北新桥秋果酒店(北京东直门雍和宫簋街店)南；电话：18618564934；网点编码：2904699；服务：京配配送服务</description>
+    <Point>
+      <coordinates>116.424795,39.947816,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>北京新仓站</name>
+    <description>北京市东城区豆瓣胡同2号楼底商；电话：19233014680；网点编码：689804；服务：京配配送、自提服务</description>
+    <Point>
+      <coordinates>116.432304,39.928558,0</coordinates>
+    </Point>
+  </Placemark>
+
+</Document>
+</kml>
