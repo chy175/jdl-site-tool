@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>京东物流网点-广东省-惠州市-惠城区</name>
+  <description>数据来源：京东物流官网网点查询（公开接口）｜抓取日期：2026-10-10｜共 39 个站点</description>
+  <Placemark>
+    <name>惠州惠城站</name>
+    <description>广东省惠州市惠城区三栋镇景昇奇石园艺场西100米；电话：19875267021；网点编码：527；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.46233,23.039418,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州陈江网格站</name>
+    <description>广东省惠州市惠城区陈江街道东星路48号大欣集团内五区40号仓库；电话：18576444976；网点编码：1569；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.330568,22.98966,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州小金口站</name>
+    <description>广东省惠州市惠城区小金口街道广东源特电气旁A1栋；电话：15916354431；网点编码：2861；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.42584,23.171952,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州水口站</name>
+    <description>广东省惠州市惠城区红岭路京东快递；电话：15768107595；网点编码：54299；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.480713,23.122117,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州云山站</name>
+    <description>广东省惠州市惠城区经三路鑫匠木业家具定制有限公司旁；电话：13824275464；网点编码：129134；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.398744,23.147154,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州龙丰站</name>
+    <description>广东省惠州市惠城区龙丰街道鹅岭南路42号11-16室 京东快递；电话：13809833530；网点编码：153529；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.39010341850909,23.071485654038923,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州惠环站</name>
+    <description>广东省惠城区惠环街道金岭路20号A栋1楼京东快递；电话：18820396920；网点编码：460786；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.351646,23.03605989473684,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州潼侨站</name>
+    <description>广东惠州市惠城区潼侨镇康华街道惠州市海祥五金制品有限公司京东快递；电话：15113272144；网点编码：578411；服务：京配配送、自提服务、生鲜自提；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.285563,23.040028,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州三栋站</name>
+    <description>广东省惠州市惠城区三栋镇木沥村石头屋小组财源商店旁；电话：15766306530；网点编码：579066；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.467992,22.988445,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州横沥站</name>
+    <description>广东省惠州市惠城区水口街道大和村上塘小组389号修传动轴四轮定位；电话：15976233340；网点编码：579907；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.564014,23.148439,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州马安站</name>
+    <description>广东省惠州市惠城区马安镇双寮村卫生站旁厂房京东快递；电话：19875267514；网点编码：664336；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.477504,23.045541,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州麦地虚营业部</name>
+    <description>惠州市河南岸10号小区南山花园第2栋1层70号商场；电话：13143050760；网点编码：834188；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.412888,23.05826,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州龙丰虚拟营业部</name>
+    <description>惠州市惠城区鹅岭南路42号21-23；电话：18948278328；网点编码：834192；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.39047,23.07151,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州惠环虚营业部</name>
+    <description>广东省惠州市仲恺高新区惠风东二路26号；电话：13143058656；网点编码：834196；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.3632,23.02014,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州陈江虚营业部</name>
+    <description>广东省惠州市惠城区陈江站古湖村古湖路43号；电话：18688330075；网点编码：834200；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.33269,22.99806,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州江北虚营业部</name>
+    <description>惠州市江北望江旺岗村大王公地段；电话：13760774167；网点编码：834222；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.421829,23.076056,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州三新虚营业部</name>
+    <description>广东省惠州市江北三新村六组75号；电话：15768657340；网点编码：834226；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.402771,23.13105,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州横沥虚营业部</name>
+    <description>惠州市城区水口镇水口张村115号；电话：18823602241；网点编码：834230；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.492523,23.133272,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州水口虚营业部</name>
+    <description>惠州市惠城区水口镇龙津开发区谭屋二路3号；电话：15546997292；网点编码：834236；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.456143,23.102014,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州惠城虚营业部</name>
+    <description>惠州市河南岸上马庄上二组新村93号；电话：15920904929；网点编码：834288；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.422493,23.042097,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州三栋虚拟营业部</name>
+    <description>广东省惠州市惠城区三栋镇恒康二路尽头；电话：15816456570；网点编码：837164；服务：自寄服务、揽收服务；营业：09:00~21:00</description>
+    <Point>
+      <coordinates>114.470078,22.98093,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州河南岸站</name>
+    <description>广东省惠州市惠城区河南岸街道冷水坑村禾联小组300号京东快递；电话：15815064518；网点编码：844946；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.431191,23.030859,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州下角站</name>
+    <description>广东省惠州市惠城区江南大道昊达产业园；电话：13790759060；网点编码：1323110；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.383694,23.130513,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州仲恺集配站</name>
+    <description>广东省惠州市惠城区仲恺高新区惠风东一路3号53号；电话：18682168152；网点编码：1355896；服务：自提自寄服务、揽收服务、派送服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.36603840461518,23.024745404615174,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州望江网格站</name>
+    <description>广东省惠州市惠城区汝湖镇虾村7组 （中信大桥头）京东快递；电话：18617230519；网点编码：1370358；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.44522195398602,23.130151348261712,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州金山湖网格站</name>
+    <description>广东省惠州市惠城区南山公园(演达二路南)京东快递金山湖营业部；电话：15815473470；网点编码：1388094；服务：京配配送、自提服务；营业：08:00~20:00</description>
+    <Point>
+      <coordinates>114.426056,23.060365,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州沥林揽派服务站</name>
+    <description>广东惠州市惠城区沥林镇罗村湘惠源地产；电话：18512018017；网点编码：1568346；服务：京配配送服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.210104,22.989864,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州潼侨虚拟服务站</name>
+    <description>广东惠州市潼侨镇康华路康华住宅小区7-61号；电话：15113272144；网点编码：1961633；服务：京配配送服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.29204727122521,23.038539490039447,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州湖溪站</name>
+    <description>广东省惠州市惠城区财记汽车维修行(育才路北)；电话：13360413238；网点编码：1987343；服务：京配配送、自提服务；营业：09:00~19:00</description>
+    <Point>
+      <coordinates>114.45440766111098,23.111083661110982,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州江北集配站</name>
+    <description>广东省惠州市惠城区小金口街道金风二路60号斌城物流园3栋6-9号；电话：18198425677；网点编码：2128663；服务：自提自寄服务、揽收服务、派送服务；营业：07:30~21:00</description>
+    <Point>
+      <coordinates>114.400261,23.141552,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州仲恺中韩项目集配站</name>
+    <description>广东省惠州市惠城区仲恺高新区惠风东一路3号53号；电话：18682168152；网点编码：2191411；服务：京配配送服务</description>
+    <Point>
+      <coordinates>114.3653718719586,23.024927775367928,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州学院校园服务站</name>
+    <description>广东省惠州市惠城区惠州学院；电话：15976233340；网点编码：2206531；服务：京配配送、自提服务</description>
+    <Point>
+      <coordinates>114.418502,23.037247,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州仲恺集配站虚拟服务站</name>
+    <description>广东省惠州市惠城区平南工业区美菜网惠州仓(惠风西三路北)；电话：19875267276；网点编码：3263139；服务：自寄服务、揽收服务</description>
+    <Point>
+      <coordinates>114.342899,23.009886,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州惠环洗护揽派服务站</name>
+    <description>广东惠州市惠城区惠环街道惠台工业区惠风东一路16号；电话：17876457643；网点编码：3870477；服务：京配配送服务</description>
+    <Point>
+      <coordinates>114.363099,23.023735,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州下角宝宝巴士驻场服务站</name>
+    <description>广东省惠州市惠城区梅湖路东英工贸园；电话：13790759060；网点编码：5446075；服务：自寄服务、揽收服务</description>
+    <Point>
+      <coordinates>114.377774,23.129426,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州马安经济学院校园服务站</name>
+    <description>惠州马安经济学院；电话：13809833530；网点编码：5961511；服务：京配配送、自提服务</description>
+    <Point>
+      <coordinates>114.473563,23.076626,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州横沥揽派服务站</name>
+    <description>广东省惠州市惠城区水口街道东江高新区景阳工业园；电话：13825487255；网点编码：5964331；服务：自寄服务、揽收服务</description>
+    <Point>
+      <coordinates>114.570961,23.123209,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州惠城平潭镇服务站</name>
+    <description>惠州市惠城区平潭镇；电话：15816456570；网点编码：6170497；服务：京配配送服务</description>
+    <Point>
+      <coordinates>114.38257,23.08464,0</coordinates>
+    </Point>
+  </Placemark>
+
+  <Placemark>
+    <name>惠州卫生职业技术学院校园服务站</name>
+    <description>惠州卫生职业技术学院；电话：18163242421；网点编码：6365123；服务：京配配送服务</description>
+    <Point>
+      <coordinates>114.436862,23.00606,0</coordinates>
+    </Point>
+  </Placemark>
+
+</Document>
+</kml>
