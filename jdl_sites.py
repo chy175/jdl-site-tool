@@ -47,6 +47,9 @@ KNOWN_REGIONS = {
     # 北京（东城区）—— 接口实测：provinceId=1, cityId=2802, countyId=54744
     "北京": {"provinceId": 1, "cityId": 2802, "countyId": 54744,
             "label": "北京市-东城区"},
+    # 惠州（惠城区）—— 接口实测：provinceId=19, cityId=1643, countyId=36176
+    "惠州": {"provinceId": 19, "cityId": 1643, "countyId": 36176,
+             "label": "广东省-惠州市-惠城区"},
 }
 
 # 奥维地图导入用的 KML 模板（标准 KML 2.2，奥维互动地图可直接识别）
@@ -150,7 +153,7 @@ def build_kml(sites: list, title: str, source_desc: str) -> str:
             desc_parts.append("营业：" + s["businessHoursStart"] + "~" + s.get("businessHoursEnd", ""))
         places.append(KML_PLACEMARK.format(
             name=_escape_xml(name),
-            desc=_escape_xml("；".join(p for p in desc_parts if p)),
+            desc=_escape_xml(";".join(p for p in desc_parts if p)),
             lon=s.get("longitude", 0),
             lat=s.get("latitude", 0),
         ))

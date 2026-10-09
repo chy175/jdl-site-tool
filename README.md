@@ -17,7 +17,7 @@
 ```bash
 pip install -r requirements.txt
 
-# 方式A：内置城市（当前内置：北京东城区，用于验证链路）
+# 方式A：内置城市（当前内置：北京东城区、惠州惠城区）
 python jdl_sites.py --city 北京 --district 东城区
 
 # 方式B：新城市手动指定省市区 ID（推荐，ID 来源见下）
