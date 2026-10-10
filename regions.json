@@ -20,6 +20,16 @@
       "city": "惠州市",
       "district": "惠城区",
       "label": "广东省-惠州市-惠城区"
+    },
+    {
+      "key": "惠州-惠东县",
+      "provinceId": 19,
+      "cityId": 1643,
+      "countyId": 36177,
+      "province": "广东",
+      "city": "惠州市",
+      "district": "惠东县",
+      "label": "广东省-惠州市-惠东县"
     }
   ]
 }
