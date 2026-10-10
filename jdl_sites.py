@@ -31,7 +31,10 @@ from datetime import datetime
 
 API_URL = "https://api.jdl.com/site/getSiteListByAddressInfo"
 
-# 请求头：从浏览器实际观察到的字段（curl 裸调会 401，需要这套头 + 浏览器会话上下文）
+# 请求头：从浏览器实际观察到的字段。
+# 注意：实测 requests 带这套头裸调仍会 401（Invalid Host: api.jdl.com 未注册），
+# 原因是京东 WAF 按 TLS 指纹（JA3）拦截非浏览器客户端，不是请求头问题。
+# 纯接口模式建议用 curl_cffi 等模拟浏览器 TLS 指纹的库；否则走 browser 模式。
 API_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
                   "(KHTML, like Gecko) Chrome/120.0 Safari/537.36",
@@ -48,6 +51,8 @@ EMBEDDED_REGIONS = {
             "label": "北京市-东城区", "province": "北京", "city": "北京", "district": "东城区"},
     "惠州": {"provinceId": 19, "cityId": 1643, "countyId": 36176,
              "label": "广东省-惠州市-惠城区", "province": "广东", "city": "惠州市", "district": "惠城区"},
+    "惠州-惠东县": {"provinceId": 19, "cityId": 1643, "countyId": 36177,
+                    "label": "广东省-惠州市-惠东县", "province": "广东", "city": "惠州市", "district": "惠东县"},
 }
 
 
@@ -92,7 +97,9 @@ KML_PLACEMARK = """  <Placemark>
 
 def fetch_sites_api(region: dict, pause: float = 1.0) -> list:
     """
-    调用京东物流公开接口获取网点列表（主数据源）。
+    调用京东物流公开接口获取网点列表。
+    注意：requests 裸调会被 WAF 按 TLS 指纹拦截（401 Invalid Host），
+    如需纯接口模式请改用 curl_cffi 模拟 Chrome TLS 指纹；否则请用 --source browser。
     region: {"provinceId":.., "cityId":.., "countyId":..}
     返回：[{siteName,address,latitude,longitude,telephone,siteCode,...}]
     """
@@ -118,10 +125,13 @@ def fetch_sites_api(region: dict, pause: float = 1.0) -> list:
 
 def fetch_sites_browser(province: str, city: str, district: str = "") -> list:
     """
-    备选数据源：Playwright 无头浏览器驱动官网页面（任何城市都能跑，无需维护 ID 表）。
-    流程按实测页面结构编写：
-      主输入框 → 弹层 → 点第一级 tab(省份) → 选省份 → 选城市 → 选区县 → 查询
-    通过拦截 getSiteListByAddressInfo 接口响应直接拿结构化数据，不做 DOM 解析。
+    无头浏览器驱动官网页面查询（任何城市都能跑，无需维护 ID 表）。
+    实测页面结构（2026-10 联调）：
+      - 省市区选择器是 .cascade-address，三级 tab 在 .tab-list .tab-item
+      - 右侧选项在 .option-list .option-item
+      - 选完区县后弹层会自动关闭
+      - 真正的查询按钮是页面上的 button.el-button--primary（text=查询 会误点到列表区）
+    通过拦截 getSiteListByAddressInfo 接口响应直接拿结构化数据。
     """
     try:
         from playwright.sync_api import sync_playwright
@@ -131,28 +141,32 @@ def fetch_sites_browser(province: str, city: str, district: str = "") -> list:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
-        page.goto("https://www.jdl.com/network/", timeout=30000)
-        page.wait_for_load_state("networkidle")
+        page.goto("https://www.jdl.com/network/", timeout=30000, wait_until="networkidle")
+        page.wait_for_timeout(1500)
 
         # 1) 打开省市区选择器弹层
         page.click('input[placeholder="请选择省市区"]')
-        page.wait_for_timeout(500)
-        # 2) 点击第一级 tab（当前省份），右侧选项变为省份列表
-        page.click('.cascade-address .tab-list li:first-child')
+        page.wait_for_timeout(800)
+        # 2) 点第一级 tab（省级），右侧选项变为省份列表
+        page.click('.cascade-address .tab-list .tab-item >> nth=0')
         page.wait_for_timeout(500)
         # 3) 选择省份
-        page.click(f'.option-list li:has-text("{province}")')
-        page.wait_for_timeout(500)
+        page.click(f'.cascade-address .option-list .option-item:has-text("{province}")')
+        page.wait_for_timeout(800)
         # 4) 选择城市
-        page.click(f'.option-list li:has-text("{city}")')
-        page.wait_for_timeout(500)
-        # 5) 选择区县（可选）
+        page.click(f'.cascade-address .option-list .option-item:has-text("{city}")')
+        page.wait_for_timeout(800)
+        # 5) 选择区县（可选；选完后弹层会自动关闭）
         if district:
-            page.click(f'.option-list li:has-text("{district}")')
-            page.wait_for_timeout(500)
-        # 6) 点击查询，等待接口返回并解析
-        with page.expect_response(lambda r: "getSiteListByAddressInfo" in r.url, timeout=20000) as resp_info:
-            page.click('text=查询')
+            page.click(f'.cascade-address .option-list .option-item:has-text("{district}")')
+            page.wait_for_timeout(1000)
+
+        # 6) 点真正的「查询」按钮，拦截接口响应
+        with page.expect_response(
+            lambda r: "getSiteListByAddressInfo" in r.url and r.request.method == "POST",
+            timeout=20000,
+        ) as resp_info:
+            page.click('button.el-button--primary:has-text("查询")')
         data = resp_info.value.json()
         sites = data.get("data") or []
         browser.close()
@@ -260,7 +274,8 @@ def resolve_region(city: str, district: str, region_json: str) -> dict:
         '{"provinceId":..,"cityId":..,"countyId":..}\n'
         "     （ID 获取方法：打开 jdl.com/network，F12 → 网络 → 筛选 getSiteListByAddressInfo，"
         "看请求参数里的 provinceId/cityId/countyId）\n"
-        "  2) 把城市加入 jdl_sites.py 里的 KNOWN_REGIONS 表后重跑"
+        "  2) 用 --source browser 走无头浏览器，免配 ID\n"
+        "  3) 把城市加入 regions.json 后重跑"
     )
 
 
@@ -272,7 +287,7 @@ def main():
     parser.add_argument("--district", default="", help="区县名（可选），如：惠城区")
     parser.add_argument("--province", default="", help="省份名（浏览器模式用，如：广东；缺省时自动查地区表或交互输入）")
     parser.add_argument("--source", choices=["api", "browser", "demo"], default="api",
-                        help="数据源：api=接口(默认) / browser=无头浏览器 / demo=内置示例数据(离线验证输出)")
+                        help="数据源：api=接口(默认，注意 requests 裸调会被 WAF 拦 401，建议 browser) / browser=无头浏览器 / demo=内置示例数据(离线验证输出)")
     parser.add_argument("--out", default="output", help="输出目录（默认 output/）")
     parser.add_argument("--region-json", default="", help="手动指定省市区 ID 的 JSON 字符串")
     parser.add_argument("--pause", type=float, default=1.0, help="接口请求间隔秒数（限速，默认1秒）")
