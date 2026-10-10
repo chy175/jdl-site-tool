@@ -17,11 +17,11 @@
 ```bash
 pip install -r requirements.txt
 
-# 方式A：内置城市（当前内置：北京东城区、惠州惠城区）
-python jdl_sites.py --city 惠州
+# 方式A：内置城市（当前内置：北京东城区、惠州惠城区、惠州惠东县）
+python jdl_sites.py --city 惠州-惠东县
 
 # 方式B：任意城市，用浏览器自动操作官网（无需手动配 ID，推荐）
-python jdl_sites.py --city 惠州市 --district 惠城区 --source browser --province 广东
+python jdl_sites.py --city 惠州市 --district 惠东县 --source browser --province 广东
 
 # 方式C：新城市手动指定省市区 ID
 python jdl_sites.py --city 惠州市 --region-json "{\"provinceId\":..,\"cityId\":..,\"countyId\":..}"
@@ -29,6 +29,8 @@ python jdl_sites.py --city 惠州市 --region-json "{\"provinceId\":..,\"cityId\
 # 方式D：离线验证输出格式（不联网，用内置示例数据）
 python jdl_sites.py --city 北京 --district 东城区 --source demo
 ```
+
+> **提示**：默认 `--source api` 在纯 requests 环境下会被京东 WAF 按 TLS 指纹拦截（返回 401 Invalid Host），不是请求头问题。跨机器/服务器部署时优先用 `--source browser`（Playwright 无头浏览器），或自行换 `curl_cffi` 模拟 Chrome TLS 指纹。
 
 ## 新增城市（两种方式）
 
@@ -39,18 +41,18 @@ python jdl_sites.py --city 北京 --district 东城区 --source demo
 打开 [京东物流网点查询页](https://www.jdl.com/network/)，F12 →「网络」→ 筛选 `getSiteListByAddressInfo` → 页面上选好省市区并点查询 → 看该请求的请求载荷（Payload）：
 
 ```json
-[{"provinceId": 19, "cityId": 1643, "countyId": 36176, "searchSiteName": ""}]
+[{"provinceId": 19, "cityId": 1643, "countyId": 36177, "searchSiteName": ""}]
 ```
 
-把三个 ID 填进 `regions.json`，之后 `python jdl_sites.py --city <城市名>` 即可。
+把三个 ID 填进 `regions.json`，之后 `python jdl_sites.py --city <key>` 即可。
 
 ### 方式二：浏览器模式（不用配 ID）
 
 ```bash
-python jdl_sites.py --city 某城市 --source browser --province 所在省
+python jdl_sites.py --city 某城市 --source browser --province 所在省 --district 区县
 ```
 
-工具会自动打开京东物流官网，按省份→城市→区县逐级选择并查询（基于实测页面结构编写，若官网改版需微调选择器）。
+工具会自动打开京东物流官网，按省份→城市→区县逐级选择并查询（基于 2026-10 实测页面结构编写，若官网改版需微调选择器）。
 
 ## 数据源与合规说明
 
@@ -76,13 +78,22 @@ jdl-site-tool/
 
 | 数据源 | 状态 | 说明 |
 |---|---|---|
-| `api`（默认） | ✅ 主路径 | 直接调公开接口，curl 裸调会 401，代码内已带浏览器请求头，仍需在真实环境确认会话要求 |
-| `browser` | 🔧 已实现待联调 | Playwright 无头浏览器驱动页面，任何城市免配 ID；流程按实测页面结构编写，官网改版需微调 |
+| `api` | ⚠️ 受限 | 接口本身可用，但 requests 裸调会被 WAF 按 TLS 指纹拦截（401 Invalid Host: api.jdl.com 未注册）；代码内请求头已齐，缺的是浏览器 TLS 指纹。服务器部署请换 curl_cffi 或走 browser 模式 |
+| `browser` | ✅ 已联调 | Playwright 无头浏览器驱动页面，任何城市免配 ID；选择器按 2026-10 实测页面结构编写（`.cascade-address .tab-item` / `.option-item` / `button.el-button--primary`），官网改版需微调 |
 | `demo` | ✅ 可用 | 内置实测示例数据，离线验证 KML/CSV 输出格式 |
+
+## 实测踩坑记录（2026-10）
+
+- **api 模式 401 不是请求头问题**：最初以为缺 Origin/Referer，补全后仍 401，错误体是 `Invalid Host: api.jdl.com 未注册`，实际是 WAF 校验 TLS 指纹（JA3），纯 requests/curl 过不去。
+- **级联选择器第一级 tab**：不是 `.tab-list li:first-child`，而是 `.tab-list .tab-item >> nth=0`；选项要加 `.cascade-address` 前缀，否则会误中页面其他 `li`。
+- **选完区县弹层会自动关闭**：不需要再点遮罩或关闭按钮，直接等 ~1s 即可。
+- **查询按钮别用 `text=查询`**：页面上整个搜索列表区都含「查询」字样，`text=查询` 会误点到列表区域而不触发请求；要点具体的 `button.el-button--primary:has-text("查询")`。
+- **expect_response 要限定 POST**：页面加载时可能有其他 GET 请求命中同 URL 片段，限定 `request.method == "POST"` 才稳。
 
 ## 后续待办（Roadmap）
 
 - [ ] 逆向地址树接口，实现「城市名 → 省市区 ID」自动解析（api 模式免配 ID）
-- [ ] 在真实环境完成 browser 数据源联调（Playwright）
+- [x] 在真实环境完成 browser 数据源联调（Playwright）
 - [ ] 支持一次查询多区县合并输出
 - [ ] 输出奥维「线路/标签」样式定制（图标、颜色、分组）
+- [ ] api 模式接入 curl_cffi 绕过 TLS 指纹校验
